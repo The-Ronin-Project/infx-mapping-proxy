@@ -1,0 +1,44 @@
+schema-version: v2.1
+# unique name of your service in DataDog. Probably matches repo name
+dd-service: ronin-blueprint
+# Product Engineering teams are defined as pe-core, pe-ng1, pe-apex
+team: pe-core
+# application is not the same as service. An application can have 1 or more services. Use this to group them.
+application: ronin-blueprint
+description: Ronin Service Blueprint
+# Ronin lifecycle values: in-process, candidate, release, deprecated
+lifecycle: in-process
+contacts:
+  - name: Support Email
+    type: email
+    contact: pecore@projectronin.com
+  - name: PE Core Slack Channel
+    type: slack
+    contact: https://projectronin.slack.com/archives/C04HMDPRSB0
+links:
+  - name: Runbook
+    type: runbook
+    url: https://projectronin.atlassian.net/.....
+  - name: Source Code
+    type: repo
+    provider: github
+    url: https://github.com/projectronin/ronin-blueprint
+  - name: User Guide
+    type: doc
+    provider: Confluence
+    url: https://projectronin.atlassian.net/...
+  - name: Blueprint Overview
+    type: dashboard
+    url: https://app.datadoghq.com/dashboard/...
+  - name: Argo (Dev)
+    type: other
+    url: https://argocd.devops.projectronin.io/applications/argocd/ronin-blueprint-dev-oci
+  - name: Argo (Stage)
+    type: other
+    url: https://argocd.devops.projectronin.io/applications/argocd/ronin-blueprint-stage-oci
+  - name: Argo (Prod)
+    type: other
+    url: https://argocd.devops.projectronin.io/applications/argocd/ronin-blueprint-prod-oci
+integrations:
+  pagerduty:
+    service-url: https://project-ronin.pagerduty.com/service-directory/P9T94IN

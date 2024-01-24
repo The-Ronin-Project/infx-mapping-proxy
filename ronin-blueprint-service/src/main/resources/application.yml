@@ -1,0 +1,26 @@
+spring:
+  application.name: ronin-blueprint
+  main:
+    banner-mode: 'off'
+  liquibase.enabled: false
+  jpa.open-in-view: false
+
+# Enable sending metrics using an allow list. Only specified metrics will be
+# exported to DataDog.
+#
+# Disable all metrics
+#management.metrics.enable.all=false
+# Allow metrics prefixed with `roninkafka`.
+# Additional entries can be added to allow other prefixes.
+#management.metrics.enable.roninkafka=true
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    url: jdbc:mysql://localhost/ronin_blueprint?createDatabaseIfNotExist=true
+    username: ronin_blueprint
+    password: ronin_blueprint
+  liquibase.enabled: true
+seki.url: https://seki.dev.projectronin.io/

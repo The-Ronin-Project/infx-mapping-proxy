@@ -1,0 +1,5 @@
+[versions]
+contract-rest-ronin-blueprint-v1 = "1.0.1"
+
+[libraries]
+contract-rest-ronin-blueprint-v1 = { module = "com.projectronin.rest.contract:contract-rest-ronin-blueprint-v1", version.ref = "contract-rest-ronin-blueprint-v1" }

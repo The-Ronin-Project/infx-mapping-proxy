@@ -1,0 +1,97 @@
+name: CICD
+on:
+  push:
+    branches: [main]
+  pull_request:
+env:
+  DB_MODULE: ronin-blueprint-database
+  SERVICE_MODULE: ronin-blueprint-service
+  SERVICE_NAME: ronin-blueprint
+jobs:
+  ###############################################
+  # Run tests and publish coverage to codecov.io
+  ###############################################
+  build:
+    runs-on: oci-shared
+    steps:
+      - name: Setup
+        uses: projectronin/github/.github/actions/setup-jdk-build@setup-jdk-build/v1
+      - name: Get Version
+        id: get-version
+        uses: projectronin/github/get-version@get-version/v3
+
+      - name: Put version into environment
+        id: version_into_environment
+        shell: bash
+        run: |-
+          echo "SERVICE_VERSION=${{ steps.get-version.outputs.version }}" >> "$GITHUB_ENV"
+
+      - name: Build and Test
+        uses: projectronin/github/.github/actions/basic-gradle-build-publish@basic_gradle_build_publish/v4
+        with:
+          nexus_user: ${{ secrets.NEXUS_MAVEN_USER }}
+          nexus_token: ${{ secrets.NEXUS_MAVEN_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          sonar_token: ${{ secrets.SONAR_TOKEN }}
+          sonar_host_url: ${{ secrets.SONAR_HOST_URL }}
+          dd-api-key: ${{ secrets.DATADOG_API_KEY }}
+          dd-service-name: ${{ env.SERVICE_NAME }}
+          publish: false
+
+      - name: Upload Local Contract Test artifact on failure
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: local-contract-test-artifact
+          path: '/runner/_work/ronin-blueprint/ronin-blueprint/ronin-blueprint-service/build/reports/tests/localContractTest/'
+
+      - name: Upload Contract Test Service logs artifact on failure
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: contract-test-service-logs
+          path: '/runner/_work/ronin-blueprint/ronin-blueprint/ronin-blueprint-service/build/contract-test-service-logs/'
+
+      - name: Build Database Image
+        id: build-database-image
+        uses: projectronin/github/build-image@build-image/v3
+        with:
+          image: ${{ env.DB_MODULE }}
+          tags: "${{ github.sha }},${{ steps.get-version.outputs.version }}"
+          docker-context-directory: ./${{ env.DB_MODULE }}
+          push: "${{ github.ref_name == 'main' }}"
+          username: "${{ secrets.NEXUS_DOCKER_USERNAME }}"
+          password: "${{ secrets.NEXUS_DOCKER_PASSWORD }}"
+
+      - name: Build Service Image
+        id: build-service-image
+        uses: projectronin/github/build-image@build-image/v3
+        with:
+          image: ${{ env.SERVICE_NAME }}
+          build-args: "JAR_NAME=${{ env.SERVICE_MODULE }}"
+          tags: "${{ github.sha }},${{ steps.get-version.outputs.version }}"
+          docker-context-directory: ./${{ env.SERVICE_MODULE }}
+          push: "${{ github.ref_name == 'main' }}"
+          username: "${{ secrets.NEXUS_DOCKER_USERNAME }}"
+          password: "${{ secrets.NEXUS_DOCKER_PASSWORD }}"
+
+      - name: Set Version
+        id: set-version
+        uses: projectronin/github/set-version@set-version/v2
+        with:
+          semver: "${{ steps.get-version.outputs.version }}"
+
+    outputs:
+      version: ${{ steps.get-version.outputs.version }}
+
+  deploy:
+    if: github.ref == 'refs/heads/main' || contains(github.ref, 'hotfix/')
+    uses: projectronin/ronin-charts/.github/workflows/deploy.yaml@deploy/v5
+    needs: [build]
+    with:
+      environment: dev
+      application: ronin-blueprint
+      tag: ${{ needs.build.outputs.version }}
+      commit-sha: ${{ github.sha }}
+      db-migrate-tag: ${{ needs.build.outputs.version }}
+    secrets: inherit
