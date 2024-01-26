@@ -1,11 +1,11 @@
 schema-version: v2.1
 # unique name of your service in DataDog. Probably matches repo name
-dd-service: ronin-blueprint
+dd-service: infx-mapping-proxy
 # Product Engineering teams are defined as pe-core, pe-ng1, pe-apex
 team: pe-core
 # application is not the same as service. An application can have 1 or more services. Use this to group them.
-application: ronin-blueprint
-description: Ronin Service Blueprint
+application: infx-mapping-proxy
+description: Informatics Mapping Proxy
 # Ronin lifecycle values: in-process, candidate, release, deprecated
 lifecycle: in-process
 contacts:

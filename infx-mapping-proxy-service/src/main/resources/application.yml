@@ -1,0 +1,11 @@
+spring:
+  application.name: infx-mapping-proxy
+  main:
+    banner-mode: 'off'
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+seki.url: https://seki.dev.projectronin.io/
+ronin.auth.issuers: ${seki.url},https://ronin-dev.auth0.com/,https://auth.dev.projectronin.io
