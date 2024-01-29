@@ -1,5 +1,5 @@
 [versions]
-contract-rest-ronin-blueprint-v1 = "1.0.1"
+contract-rest-v1 = "1.0.0-initial-SNAPSHOT"
 
 [libraries]
-contract-rest-ronin-blueprint-v1 = { module = "com.projectronin.rest.contract:contract-rest-ronin-blueprint-v1", version.ref = "contract-rest-ronin-blueprint-v1" }
+contract-rest-v1 = { module = "com.projectronin.rest.contract:contract-rest-infx-mapping-v1", version.ref = "contract-rest-v1" }

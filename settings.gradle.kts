@@ -1,8 +1,7 @@
-rootProject.name = "ronin-blueprint"
+rootProject.name = "infx-mapping-proxy"
 
 include(
-    "ronin-blueprint-database",
-    "ronin-blueprint-service"
+    "infx-mapping-proxy-service"
 )
 
 pluginManagement {

@@ -1,0 +1,9 @@
+spring:
+  config:
+    activate:
+      on-profile: test
+seki.url: https://seki.dev.projectronin.io/
+ronin:
+  auth.issuers: ${seki.url},https://ronin-dev.auth0.com/,https://auth.dev.projectronin.io
+  infx.proxy.mappingUrl: http://localhost:8081
+
