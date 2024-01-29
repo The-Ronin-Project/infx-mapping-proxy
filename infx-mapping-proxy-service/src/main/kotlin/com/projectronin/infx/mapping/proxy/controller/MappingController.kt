@@ -30,7 +30,7 @@ class MappingController(
             query != null -> "${properties.mappingUrl}/$path?$query"
             else -> "${properties.mappingUrl}/$path"
         }
-        logger.info(uri)
+        logger.info("Proxying ${request.path} to $uri")
 
         val mappingRequest = Request.Builder()
             .url(uri)

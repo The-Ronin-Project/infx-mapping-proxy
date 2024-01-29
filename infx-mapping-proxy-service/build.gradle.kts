@@ -13,15 +13,13 @@ dependencies {
 
     developmentOnly(productcommon.spring.devtools)
 
+    testImplementation(productcommon.wiremock)
     testImplementation(productcommon.bundles.spring.test) {
         exclude(module = "mockito-core")
     }
-    testImplementation(productcommon.bundles.testcontainers)
     testImplementation(productcommon.product.spring.jwt.auth.mocks)
-    testImplementation(productcommon.kotlinx.coroutines.test)
-
-    localContractTestImplementation(productcommon.product.contract.test.common)
-    localContractTestImplementation(productcommon.product.spring.jwt.auth.testutils)
+    testImplementation(productcommon.product.contract.test.common)
+    api(productcommon.product.spring.jwt.auth.testutils)
 }
 
 sourceSets {
