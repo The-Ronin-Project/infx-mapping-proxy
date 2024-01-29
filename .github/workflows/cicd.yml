@@ -4,9 +4,8 @@ on:
     branches: [main]
   pull_request:
 env:
-  DB_MODULE: ronin-blueprint-database
-  SERVICE_MODULE: ronin-blueprint-service
-  SERVICE_NAME: ronin-blueprint
+  SERVICE_MODULE: infx-mapping-proxy-service
+  SERVICE_NAME: infx-mapping-proxy
 jobs:
   ###############################################
   # Run tests and publish coverage to codecov.io
@@ -38,31 +37,6 @@ jobs:
           dd-service-name: ${{ env.SERVICE_NAME }}
           publish: false
 
-      - name: Upload Local Contract Test artifact on failure
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: local-contract-test-artifact
-          path: '/runner/_work/ronin-blueprint/ronin-blueprint/ronin-blueprint-service/build/reports/tests/localContractTest/'
-
-      - name: Upload Contract Test Service logs artifact on failure
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: contract-test-service-logs
-          path: '/runner/_work/ronin-blueprint/ronin-blueprint/ronin-blueprint-service/build/contract-test-service-logs/'
-
-      - name: Build Database Image
-        id: build-database-image
-        uses: projectronin/github/build-image@build-image/v3
-        with:
-          image: ${{ env.DB_MODULE }}
-          tags: "${{ github.sha }},${{ steps.get-version.outputs.version }}"
-          docker-context-directory: ./${{ env.DB_MODULE }}
-          push: "${{ github.ref_name == 'main' }}"
-          username: "${{ secrets.NEXUS_DOCKER_USERNAME }}"
-          password: "${{ secrets.NEXUS_DOCKER_PASSWORD }}"
-
       - name: Build Service Image
         id: build-service-image
         uses: projectronin/github/build-image@build-image/v3
@@ -90,8 +64,7 @@ jobs:
     needs: [build]
     with:
       environment: dev
-      application: ronin-blueprint
+      application: ${{ env.SERVICE_NAME }}
       tag: ${{ needs.build.outputs.version }}
       commit-sha: ${{ github.sha }}
-      db-migrate-tag: ${{ needs.build.outputs.version }}
     secrets: inherit
