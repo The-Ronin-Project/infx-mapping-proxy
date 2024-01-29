@@ -22,7 +22,6 @@ import org.springframework.boot.test.system.OutputCaptureExtension
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.context.annotation.Import
 import org.springframework.http.HttpHeaders
-import org.springframework.http.HttpHeaders.AUTHORIZATION
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 
