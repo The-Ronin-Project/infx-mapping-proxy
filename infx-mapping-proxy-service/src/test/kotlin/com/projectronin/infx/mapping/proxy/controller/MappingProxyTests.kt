@@ -1,24 +1,16 @@
 package com.projectronin.infx.mapping.proxy.controller
 
-import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock.aResponse
-import com.github.tomakehurst.wiremock.client.WireMock.equalTo
 import com.github.tomakehurst.wiremock.client.WireMock.get
 import com.github.tomakehurst.wiremock.client.WireMock.getRequestedFor
 import com.github.tomakehurst.wiremock.client.WireMock.stubFor
 import com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo
 import com.github.tomakehurst.wiremock.client.WireMock.verify
 import com.github.tomakehurst.wiremock.junit5.WireMockTest
-import com.ninjasquad.springmockk.MockkBean
 import com.projectronin.auth.token.RoninUserType
 import com.projectronin.infx.mapping.proxy.config.SharedConfigurationReference
-import com.projectronin.product.common.config.ExceptionConfig
-import com.projectronin.product.common.config.HttpClientConfiguration
-import com.projectronin.product.common.testutils.AuthKeyGenerator
 import com.projectronin.product.common.testutils.JwtAuthMockConfig
 import com.projectronin.product.common.testutils.JwtAuthMockHelper
-import com.projectronin.product.common.testutils.wiremockJwtAuthToken
-import com.projectronin.product.contracttest.ContractTestContext
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -77,7 +69,6 @@ class MappingProxyTests {
         assertThat(out).contains("Proxying /api/v1/ping to http://localhost:8081/ping")
     }
 
-
     @Test
     fun `simple unauthorized no token not proxied`(output: CapturedOutput) {
         stubFor(
@@ -106,6 +97,4 @@ class MappingProxyTests {
 
         JwtAuthMockHelper.configure(JwtAuthMockHelper.createAuthenticationProvider { auth })
     }
-
-
 }
