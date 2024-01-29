@@ -57,14 +57,14 @@ jobs:
 
     outputs:
       version: ${{ steps.get-version.outputs.version }}
-
-  deploy:
-    if: github.ref == 'refs/heads/main' || contains(github.ref, 'hotfix/')
-    uses: projectronin/ronin-charts/.github/workflows/deploy.yaml@deploy/v5
-    needs: [build]
-    with:
-      environment: dev
-      application: ${{ env.SERVICE_NAME }}
-      tag: ${{ needs.build.outputs.version }}
-      commit-sha: ${{ github.sha }}
-    secrets: inherit
+#
+#  deploy:
+#    if: github.ref == 'refs/heads/main' || contains(github.ref, 'hotfix/')
+#    uses: projectronin/ronin-charts/.github/workflows/deploy.yaml@deploy/v5
+#    needs: [build]
+#    with:
+#      environment: dev
+#      application: infx-mapping-proxy
+#      tag: ${{ needs.build.outputs.version }}
+#      commit-sha: ${{ github.sha }}
+#    secrets: inherit
